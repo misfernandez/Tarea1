@@ -132,4 +132,16 @@ Mejores<-as.data.frame(Mejores)
 
 Ingredientes_finales<-Mejores$ingredientes
 Ingredientes_finales<-as.data.frame(Ingredientes_finales)
+
+Mejores
 ```
+
+    ##     ingredientes Total
+    ## 45         palta     5
+    ## 49        tomate    11
+    ## 52       lechuga     7
+    ## 54            aj     7
+    ## 73    pepinillos     4
+    ## 83      mayonesa     4
+    ## 103       tocino     4
+    ## 113 quesocheddar     4

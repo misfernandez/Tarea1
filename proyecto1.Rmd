@@ -84,5 +84,7 @@ Mejores<-as.data.frame(Mejores)
 
 Ingredientes_finales<-Mejores$ingredientes
 Ingredientes_finales<-as.data.frame(Ingredientes_finales)
+
+Mejores
 ```
 
