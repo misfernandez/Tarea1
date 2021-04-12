@@ -1,0 +1,88 @@
+---
+title: "Untitled"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readxl)
+library(datasets)
+library(tidyverse)
+library(dplyr)
+library(tidyr)
+library(stringr)
+library(quanteda)
+library(ggplot2)
+library(utf8)
+
+
+
+
+# como mirar las hojas de tu excel
+ruta_excel <- "/Users/misaelfernandez/Desktop/sanguchez.xlsx"
+
+#como mirar las hojas de tu excel 
+dato_excel <-read_excel(ruta_excel)
+
+#crear tabla nueva
+datos_analisis <-dato_excel[,5:6]
+
+datos_analisis <- as.data.frame(datos_analisis)
+attach(datos_analisis)
+
+str(datos_analisis)
+datos_analisis$nota <- as.numeric(datos_analisis$nota)
+
+#tabla con datos limpios
+datos_analisis1 <- na.omit(datos_analisis)
+
+#tabla solo nota mayor a 5
+sanguche_final = datos_analisis1 [datos_analisis1$nota >=5,]
+#cambie nombre de las columnas
+names (sanguche_final)= c("ingredientes", "notas")
+
+#se crea una tabla solo con los ingredientes de las preparaciones
+tabla_ingredientes <- str_split_fixed(sanguche_final$ingredientes, pattern = ",", n=8)
+
+
+
+#crear dataframe
+tabla_ingredientes<-as.data.frame(tabla_ingredientes)
+#se cambian los nombres
+names (tabla_ingredientes)= c("ingrediente1", "ingrediente2","ingrediente3", "ingrediente4","ingrediente5", "ingrediente6","ingrediente7", "ingrediente8")
+
+#conversion a tabla identidad
+texto <- sanguche_final$ingredientes
+
+#se eliminan los espacios por espacios vacios
+texto<-gsub(" ","", texto)
+texto <- char_tolower(texto)
+texto <- iconv(texto, to = "ASCII//TRANSLIT")
+
+#se genera la tabla con la repeticion de los nombres
+matriz_ingre <- dfm(texto, remove = c(stopwords("es"), "vs", ",","´",".","num","?","(",")","!","%","/"))
+
+#se cuenta la cantidad de veces que se repite el ingrediente
+Total = colSums (matriz_ingre)
+
+#se genera un vector con con los nombres 
+Ingr<-colSums(matriz_ingre)
+Ingr<-attributes(Ingr)
+
+#se juntan los vectores en un data frame
+Total<-as.data.frame(Total)
+Ingr<-as.data.frame(Ingr)
+Ingr$cantidad<-Total
+names (Ingr)= c("ingredientes", "total")
+
+#se seleccionan los ingredientes cantidad sobre 4 
+Mejores = Ingr [Ingr$total >=4,]
+Mejores<-as.data.frame(Mejores)
+
+Ingredientes_finales<-Mejores$ingredientes
+Ingredientes_finales<-as.data.frame(Ingredientes_finales)
+```
+
